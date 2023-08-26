@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posts</title>
+</head>
+<body>
+<h1>Posts</h1>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Content</th>
+    <th>Created At</th>
+  </tr>
+  <tr th:each="account : ${accounts}">
+    <td th:text="${account.id}"></td>
+    <td th:text="${account.snsId}"></td>
+    <td th:text="${account.snsInfo}"></td>
+    <td th:text="${account.email}"></td>
+  </tr>
+</table>
+</body>
+</html>
