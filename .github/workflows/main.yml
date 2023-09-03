@@ -39,6 +39,12 @@ jobs:
       
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Setup app.yaml with secrets
+        run: |
+          cd ./src/main/appengine
+          echo "env_variables:" >> app.yaml
+          echo "  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}" >> app.yaml
       
       - name: Auth to GCP
         uses: 'google-github-actions/auth@v1'
