@@ -9,6 +9,10 @@ build/
 ### 기타 ###
 application-oauth.properties
 
+
+### OCI wallet ###
+OracleCloud/
+
 ### STS ###
 .apt_generated
 .classpath
