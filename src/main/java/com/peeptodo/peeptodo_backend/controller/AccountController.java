@@ -23,13 +23,13 @@ public class AccountController {
         this.personRepository = personRepository;
     }
 
-    @PostMapping("/account")
+    @PostMapping("/api/account")
     public String postAccount(@RequestBody Account account){
         personRepository.save(account);
         return "account_post";
     }
 
-    @GetMapping("/account")
+    @GetMapping("/api/account")
     public String getAccountTest(Model model){
         // 아무거나 가져와서 return
 //        Account account = personRepository.findAll().get(0);
@@ -41,7 +41,7 @@ public class AccountController {
 //        return personRepository.findAll().stream().map(obj->"snsId:"+obj.getSnsId()).collect(Collectors.joining());
     }
 
-    @PostMapping("/account/save_test")
+    @PostMapping("/api/account/save_test")
     public void personSave(@RequestBody Account account) {
         personRepository.save(account);
     }
