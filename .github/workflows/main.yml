@@ -43,6 +43,7 @@ jobs:
       - name: Setup app.yaml with secrets
         run: |
           cd ./src/main/appengine
+          echo "" >> app.yaml
           echo "env_variables:" >> app.yaml
           echo "  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}" >> app.yaml
       
