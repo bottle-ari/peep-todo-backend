@@ -1,0 +1,13 @@
+runtime: java17
+service: backend-service
+instance_class: B1
+
+entrypoint: 'java -jar ./build/libs/peeptodo_backend-0.0.1-SNAPSHOT.jar'
+handlers:
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
+
+manual_scaling:
+  instances: 1
