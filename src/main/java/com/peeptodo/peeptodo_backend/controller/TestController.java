@@ -11,7 +11,7 @@ public class TestController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/test")
+    @GetMapping("/api/test")
     public String testConnection() {
         String sql = "SELECT 'Success' FROM dual";
         return jdbcTemplate.queryForObject(sql, String.class);
