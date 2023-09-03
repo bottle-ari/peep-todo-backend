@@ -31,6 +31,9 @@ jobs:
           echo "${{ secrets.OCI_WALLET }}" | base64 --decode > oci-wallet.zip
           unzip oci-wallet.zip -d ./src/main/resources/OracleCloud
 
+      - name: Set DB_PASSWORD for Github Env
+        run: echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       
