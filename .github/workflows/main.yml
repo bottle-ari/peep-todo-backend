@@ -28,7 +28,7 @@ jobs:
 
       - name: Decode and Unzip OCI Wallet
         run: |
-          echo "${{ secrets.OCI_WALLET_BASE64 }}" | base64 --decode > oci-wallet.zip
+          echo "${{ secrets.OCI_WALLET }}" | base64 --decode > oci-wallet.zip
           unzip oci-wallet.zip -d ./src/main/resources/OracleCloud
 
       - name: Set DB_PASSWORD
