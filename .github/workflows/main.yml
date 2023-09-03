@@ -25,7 +25,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      
+
+      - name: Decode and Unzip OCI Wallet
+        run: |
+          echo "${{ secrets.OCI_WALLET_BASE64 }}" | base64 --decode > oci-wallet.zip
+          unzip oci-wallet.zip -d ./src/main/resources/OracleCloud
+
+      - name: Set DB_PASSWORD
+        run: echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       
@@ -36,15 +44,8 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Decode and Unzip OCI Wallet
-        run: |
-          echo "${{ secrets.OCI_WALLET_BASE64 }}" | base64 --decode > oci-wallet.zip
-          unzip oci-wallet.zip -d ./src/main/resources/OracleCloud
         
       - name: Deploy to App Engine
-        env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
           deliverables: build.gradle
