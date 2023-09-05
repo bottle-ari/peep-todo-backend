@@ -43,7 +43,7 @@ public class OAuthAttributes {  //OAuth2UserService를 통해 가져온 OAuth2Us
                 .name(name)
                 .email(email)
                 .picture(picture)
-                .role(Role.GUEST)
+                .role(Role.USER)
                 .build();
     }
 }
