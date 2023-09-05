@@ -46,6 +46,8 @@ jobs:
           echo "" >> app.yaml
           echo "env_variables:" >> app.yaml
           echo "  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}" >> app.yaml
+          echo "  OAUTH_GOOGLE_ID: ${{ secrets.OAUTH_GOOGLE_ID }}" >> app.yaml
+          echo "  OAUTH_GOOGLE_SECRET: ${{ secrets.OAUTH_GOOGLE_SECRET }}" >> app.yaml
       
       - name: Auth to GCP
         uses: 'google-github-actions/auth@v1'
@@ -53,8 +55,6 @@ jobs:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
         
       - name: Deploy to App Engine
-        env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
           deliverables: build.gradle
