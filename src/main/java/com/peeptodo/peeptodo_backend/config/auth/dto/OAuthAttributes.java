@@ -1,6 +1,7 @@
 package com.peeptodo.peeptodo_backend.config.auth.dto;
 
-import com.peeptodo.peeptodo_backend.entity.GoogleUser;
+import com.peeptodo.peeptodo_backend.domain.Role;
+import com.peeptodo.peeptodo_backend.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -37,11 +38,12 @@ public class OAuthAttributes {  //OAuth2UserService를 통해 가져온 OAuth2Us
                 .build();
     }
 
-    public GoogleUser toEntity() {
-        return GoogleUser.builder()
+    public User toEntity() {
+        return User.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)
+                .role(Role.USER)
                 .build();
     }
 }
