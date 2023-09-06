@@ -18,7 +18,7 @@ public class GoogleOAuth2Service {
     private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
     private String GOOGLE_CLIENT_ID = System.getenv("OAUTH_GOOGLE_ID");
     private String GOOGLE_CLIENT_SECRET = System.getenv("OAUTH_GOOGLE_SECRET");
-    private String LOGIN_REDIRECT_URL = "http://peeptodo.com/api/oauth2/callback/google";
+    private String LOGIN_REDIRECT_URL = "https://peeptodo.com/api/oauth2/callback/google";
 
     @Autowired
     private final UserRepository userRepository;
