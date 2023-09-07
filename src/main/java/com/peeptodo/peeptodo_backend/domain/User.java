@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -33,27 +35,20 @@ public class User {
     private String provider;
 
     @Column
-    private String providerId;
+    private String provider_type;
 
     @Column
     private LocalDateTime created_at;
 
     @Builder
-    public User(String name, String email, String picture, Role role, String provider, String providerId, LocalDateTime created_at) {
+    public User(String name, String email, String picture, Role role, String provider, String provider_type, LocalDateTime created_at) {
         this.name = name;
         this.email = email;
         this.picture = picture;
         this.role = role;
         this.provider = provider;
-        this.providerId = providerId;
+        this.provider_type = provider_type;
         this.created_at = created_at;
-    }
-
-    public User update(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
-
-        return this;
     }
 
     public String getRoleKey() {
