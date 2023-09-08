@@ -1,21 +1,23 @@
 package com.peeptodo.peeptodo_backend.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
@@ -35,21 +37,14 @@ public class User {
     private String provider;
 
     @Column
-    private String provider_type;
-
-    @Column
     private LocalDateTime created_at;
 
-    @Builder
-    public User(String name, String email, String picture, Role role, String provider, String provider_type, LocalDateTime created_at) {
-        this.name = name;
-        this.email = email;
-        this.picture = picture;
-        this.role = role;
-        this.provider = provider;
-        this.provider_type = provider_type;
-        this.created_at = created_at;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "id", referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+    private Set<Authority> authorities;
 
     public String getRoleKey() {
         return this.role.getKey();

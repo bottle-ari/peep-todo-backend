@@ -14,7 +14,7 @@ public class OAuth2Controller {
     private GoogleOAuth2Service googleOAuth2Service;
 
     @GetMapping("/api/oauth2/callback/google")
-    public ResponseEntity<?> successGoogleLogin(@RequestParam("code") String accessCode) {
+    public ResponseEntity<String> successGoogleLogin(@RequestParam("code") String accessCode) {
         return googleOAuth2Service.getGoogleAccessToken(accessCode);
     }
 }
