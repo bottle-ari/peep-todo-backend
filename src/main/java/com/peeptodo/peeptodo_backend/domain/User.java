@@ -1,17 +1,24 @@
 package com.peeptodo.peeptodo_backend.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -33,30 +40,44 @@ public class User {
     private String provider;
 
     @Column
-    private String providerId;
-
-    @Column
     private LocalDateTime created_at;
 
-    @Builder
-    public User(String name, String email, String picture, Role role, String provider, String providerId, LocalDateTime created_at) {
-        this.name = name;
-        this.email = email;
-        this.picture = picture;
-        this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.created_at = created_at;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "refresh_token_id")
+    private RefreshToken refreshToken;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getKey()));
     }
 
-    public User update(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
-
-        return this;
+    @Override
+    public String getPassword() {
+        return null; // Google OAuth를 사용하므로 비밀번호는 null
     }
 
-    public String getRoleKey() {
-        return this.role.getKey();
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
