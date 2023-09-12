@@ -31,8 +31,10 @@ jobs:
           echo "${{ secrets.OCI_WALLET }}" | base64 --decode > oci-wallet.zip
           unzip oci-wallet.zip -d ./src/main/resources/OracleCloud
 
-      - name: Set DB_PASSWORD for Github Env
-        run: echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+      - name: Set DB_PASSWORD & JWT_SECRET for Github Env
+        run: |
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -48,6 +50,7 @@ jobs:
           echo "  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}" >> app.yaml
           echo "  OAUTH_GOOGLE_ID: ${{ secrets.OAUTH_GOOGLE_ID }}" >> app.yaml
           echo "  OAUTH_GOOGLE_SECRET: ${{ secrets.OAUTH_GOOGLE_SECRET }}" >> app.yaml
+          echo "  JWT_SECRET: ${{ secrets.JWT_SECRET }}" >> app.yaml
       
       - name: Auth to GCP
         uses: 'google-github-actions/auth@v1'
