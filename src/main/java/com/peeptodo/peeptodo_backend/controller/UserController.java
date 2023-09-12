@@ -19,9 +19,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long id) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-        ProfileResponseDto profileResponseDto = userService.getProfile(id);
+    @GetMapping(value = "", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<ProfileResponseDto> getProfile() throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+        ProfileResponseDto profileResponseDto = userService.getProfile();
         return ResponseEntity.ok().body(profileResponseDto);
     }
 
