@@ -7,6 +7,8 @@ import com.peeptodo.peeptodo_backend.dto.CategoryResponseDto;
 import com.peeptodo.peeptodo_backend.repository.CategoryRepository;
 import com.peeptodo.peeptodo_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +23,11 @@ public class CategoryService {
     private UserRepository userRepository;
 
     //Create
-    public Category createCategory(CategoryRequestDto requestDto, Long id) {
-        User user = userRepository.findById(id)
+    public Category createCategory(CategoryRequestDto requestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         Category category = new Category();
@@ -40,8 +45,14 @@ public class CategoryService {
     }
 
     //Read
-    public List<CategoryResponseDto> getAllCategories(Long userId) {
-        List<Category> categories = categoryRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Category not found!"));
+    public List<CategoryResponseDto> getAllCategories() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+
+        List<Category> categories = categoryRepository.findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("Category not found!"));
         return categories.stream()
                 .map(category -> {
                     CategoryResponseDto dto = new CategoryResponseDto();

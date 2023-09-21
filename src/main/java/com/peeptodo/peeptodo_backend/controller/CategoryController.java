@@ -19,44 +19,44 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<CategoryResponseDto> createCategory(@PathVariable Long id, @RequestBody CategoryRequestDto requestDto) {
-        Category newCategory = categoryService.createCategory(requestDto, id);
+    @PostMapping(value = "", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody CategoryRequestDto requestDto) {
+        Category newCategory = categoryService.createCategory(requestDto);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<CategoriesResponseDto> getAllCategories(@PathVariable Long id) {
-        List<CategoryResponseDto> categoryResponseDtoList = categoryService.getAllCategories(id);
+    @GetMapping(value = "", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<CategoriesResponseDto> getAllCategories() {
+        List<CategoryResponseDto> categoryResponseDtoList = categoryService.getAllCategories();
         CategoriesResponseDto categoriesResponseDto = new CategoriesResponseDto(categoryResponseDtoList);
         return ResponseEntity.ok().body(categoriesResponseDto);
     }
 
-    @PostMapping("/{categoryId}/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId, Long id) {
+    @PostMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/name/{categoryId}/name", produces = "application/json;charset=UTF-8")
+    @PatchMapping(value = "/{categoryId}/name", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> updateName(@PathVariable Long categoryId, @RequestBody String newName) {
         categoryService.updateName(categoryId, newName);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/name/{categoryId}/color", produces = "application/json;charset=UTF-8")
+    @PatchMapping(value = "/{categoryId}/color", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> updateColor(@PathVariable Long categoryId, @RequestBody String newColor) {
         categoryService.updateColor(categoryId, newColor);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/name/{categoryId}/emoji", produces = "application/json;charset=UTF-8")
+    @PatchMapping(value = "/{categoryId}/emoji", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> updateEmoji(@PathVariable Long categoryId, @RequestBody String newEmoji) {
         categoryService.updateEmoji(categoryId, newEmoji);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/name/{categoryId}/orders", produces = "application/json;charset=UTF-8")
+    @PatchMapping(value = "/{categoryId}/orders", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> updateOrders(@PathVariable Long categoryId, @RequestBody Integer newOrders) {
         categoryService.updateOrders(categoryId, newOrders);
         return ResponseEntity.ok().build();

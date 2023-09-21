@@ -59,7 +59,8 @@ public class GoogleOAuth2Service {
 
             String[] parts = idToken.split("\\.");
             String payload = parts[1];
-            String decodedPayload = new String(Base64.getDecoder().decode(payload));
+            System.out.println(payload);
+            String decodedPayload = new String(Base64.getUrlDecoder().decode(payload));
 
             JsonObject jsonObject = JsonParser.parseString(decodedPayload).getAsJsonObject();
 
