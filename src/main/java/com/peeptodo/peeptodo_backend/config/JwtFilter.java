@@ -30,7 +30,10 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            if (request.getRequestURI().startsWith("/api/oauth2/callback")) {
+            if (request.getRequestURI().startsWith("/login/google")) {
+                filterChain.doFilter(request, response);
+                return;
+            } else if (request.getRequestURI().startsWith("/api/oauth2/callback")) { // link182379182
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -52,7 +55,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             if (email != null) {
-
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 
                 if (jwtUtil.validateToken(jwt, userDetails)) {
@@ -75,7 +77,6 @@ public class JwtFilter extends OncePerRequestFilter {
             });
             return;
         }
-
         filterChain.doFilter(request, response);
     }
 

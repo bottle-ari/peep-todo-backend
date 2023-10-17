@@ -81,19 +81,27 @@ public class GoogleOAuth2Service {
 
             Cookie accessTokenCookie = new Cookie("access_token", jwtToken);
             accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setSecure(true); // HTTPS 환경에서만 사용하도록 설정
+            // HTTP 환경이면 secure X
+            if (!DomainUrl.BACKEND.getValue().contains("http://localhost:")) {
+                accessTokenCookie.setSecure(true); // HTTPS 환경에서만 사용하도록 설정
+            }
             accessTokenCookie.setPath("/");
 
             Cookie refreshTokenCookie = new Cookie("refresh_token", jwtRefreshToken);
             refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(true);
+            // HTTP 환경이면 secure X
+            if (!DomainUrl.BACKEND.getValue().contains("http://localhost:")) {
+                refreshTokenCookie.setSecure(true);
+            }
             refreshTokenCookie.setPath("/api/token/refresh");
 
             // 쿠키를 응답에 추가합니다.
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
 
-            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.FRONTEND.getValue() + "/scheduled_todo");
+            // 23.10.17 : 리다이렉트 -> 프론트엔드에서 백엔드로 수정
+            //            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.FRONTEND.getValue() + "/scheduled_todo");
+            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.BACKEND.getValue() + "/");
 
             URI uri = uriBuilder.build().toUri();
 
@@ -104,4 +112,6 @@ public class GoogleOAuth2Service {
         }
         return null;
     }
+
+
 }
