@@ -28,7 +28,7 @@ public class OAuth2Controller {
 
 
     // 23.10.17
-    @GetMapping("/login/google")
+    @GetMapping("/api/login/google")
     public ResponseEntity<?> getGoogleAuthUrl(HttpServletRequest request) throws Exception {
         var googleClientId = System.getenv("OAUTH_GOOGLE_ID");
         var googleRedirectUrl = DomainUrl.BACKEND.getValue() + "/api/oauth2/callback/google";
