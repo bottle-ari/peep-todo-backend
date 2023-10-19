@@ -99,6 +99,10 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void terminate(Long id) {
+        userRepository.deleteById(id);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
