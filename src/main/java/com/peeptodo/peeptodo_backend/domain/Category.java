@@ -1,5 +1,6 @@
 package com.peeptodo.peeptodo_backend.domain;
 
+import com.peeptodo.peeptodo_backend.listener.CategoryEntityListener;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Getter
 @Setter
 @NoArgsConstructor
+@EntityListeners(CategoryEntityListener.class)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

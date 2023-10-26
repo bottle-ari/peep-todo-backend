@@ -4,6 +4,7 @@ import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.dto.CategoriesResponseDto;
 import com.peeptodo.peeptodo_backend.dto.CategoryRequestDto;
 import com.peeptodo.peeptodo_backend.dto.CategoryResponseDto;
+import com.peeptodo.peeptodo_backend.exception.CategoryRemoveException;
 import com.peeptodo.peeptodo_backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,10 +39,19 @@ public class CategoryController {
      * @param categoryId 카테고리 ID
      * @return
      */
+    // TODO: 10/26/2023 api 명세에 response 타입 수정 (Void -> String)
     @PostMapping("/{categoryId}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok().build();
+//        try {
+//            글로벌 예외핸들;
+//            categoryService.deleteCategory(categoryId);
+//        } catch (CategoryRemoveException categoryRemoveException) {
+//            String message = categoryRemoveException.getMessage();
+//            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR); // 객체와 상태코드를 오류로 리턴
+//        }
+//        return ResponseEntity.ok().build();
     }
 
     @PatchMapping(value = "/{categoryId}/name", produces = "application/json;charset=UTF-8")

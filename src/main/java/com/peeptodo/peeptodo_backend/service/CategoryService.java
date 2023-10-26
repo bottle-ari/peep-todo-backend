@@ -4,6 +4,7 @@ import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.dto.CategoryRequestDto;
 import com.peeptodo.peeptodo_backend.dto.CategoryResponseDto;
+import com.peeptodo.peeptodo_backend.exception.CategoryRemoveException;
 import com.peeptodo.peeptodo_backend.repository.CategoryRepository;
 import com.peeptodo.peeptodo_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
