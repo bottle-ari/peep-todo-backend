@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
             if (request.getRequestURI().startsWith("/api/login/google")) {
                 filterChain.doFilter(request, response);
                 return;
-            } else if (request.getRequestURI().startsWith("/api/oauth2/callback")) { // link182379182
+            } else if (request.getRequestURI().startsWith("/api/oauth2/callback")) {
                 filterChain.doFilter(request, response);
                 return;
             }

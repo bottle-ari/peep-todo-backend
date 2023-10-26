@@ -45,6 +45,11 @@ public class CategoryService {
     }
 
     //Read
+
+    /**
+     * 인증된 ID에 해당하는 카테고리들 전부 GET
+     * @return List<CategoryResponseDto>
+     */
     public List<CategoryResponseDto> getAllCategories() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

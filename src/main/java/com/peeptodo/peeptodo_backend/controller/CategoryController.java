@@ -32,6 +32,12 @@ public class CategoryController {
         return ResponseEntity.ok().body(categoriesResponseDto);
     }
 
+
+    /**
+     * 카테고리 삭제
+     * @param categoryId 카테고리 ID
+     * @return
+     */
     @PostMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);

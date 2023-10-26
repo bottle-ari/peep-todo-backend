@@ -81,9 +81,7 @@ public class GoogleOAuth2Service {
             // 회원이 존재하지 않는다면 DB에 회원 생성시키기
             if(user == null) {
                 user = userService.createProfileWithGoogle(name, email, picture);
-                // TODO: 10/19/2023 make default category
-                // TODO: 10/19/2023 orders 방식 정해지면 빌더 수정
-
+                // code20231022193042 orders 방식 정해지면 빌더 수정
                 // default category 추가
                 Category defaultCategory = Category.builder()
                         .user(user).name(DefaultValue.DEFAULT_CATEGORY_NAME).color(DEFAULT_CATEGORY_COLOR).emoji("").orders(1).build();
