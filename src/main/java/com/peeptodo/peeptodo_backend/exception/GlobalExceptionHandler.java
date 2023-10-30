@@ -12,4 +12,11 @@ public class GlobalExceptionHandler {
         // 422 Unprocessable Entity
         return ResponseEntity.status(422).body(errorMessage);
     }
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<String> handleSecurityException(final SecurityException e) {
+        String errorMessage = e.getMessage().isEmpty() ? "잘못된 유저 정보 접근" : e.getMessage();
+        // 403 Forbidden
+        return ResponseEntity.status(403).body(errorMessage);
+    }
 }

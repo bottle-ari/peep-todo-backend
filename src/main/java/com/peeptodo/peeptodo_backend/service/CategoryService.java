@@ -1,12 +1,15 @@
 package com.peeptodo.peeptodo_backend.service;
 
 import com.peeptodo.peeptodo_backend.domain.Category;
+import com.peeptodo.peeptodo_backend.domain.Todo;
 import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.dto.CategoryRequestDto;
 import com.peeptodo.peeptodo_backend.dto.CategoryResponseDto;
 import com.peeptodo.peeptodo_backend.exception.CategoryRemoveException;
 import com.peeptodo.peeptodo_backend.repository.CategoryRepository;
 import com.peeptodo.peeptodo_backend.repository.UserRepository;
+import com.peeptodo.peeptodo_backend.util.Utils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,6 +74,32 @@ public class CategoryService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public void swapOrders(Long categoryId, Long swapCategoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
+        Category swapCategory = categoryRepository.findById(swapCategoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
+
+
+        if (category.equals(swapCategory)) return;
+
+        // 카테고리가 다른 유저의 카테고리를 가리킬 때
+        User user1 = (User) Utils.unproxy(category.getUser());
+        User user2 = (User) Utils.unproxy(swapCategory.getUser());
+        if (!user1.equals(user2)) {
+            throw new IllegalArgumentException("User in Category not match!");
+        }
+
+        Integer o1 = category.getOrders();
+        Integer o2 = swapCategory.getOrders();
+
+        category.setOrders(o2);
+        swapCategory.setOrders(o1);
+        categoryRepository.saveAll(List.of(category, swapCategory)); // 동일한 트랜잭션으로 처리해서 하나가 오류나면 둘다 오류가 발생해야 함
+
+    }
+
 
     //Update
     public void updateName(Long id, String newName) {

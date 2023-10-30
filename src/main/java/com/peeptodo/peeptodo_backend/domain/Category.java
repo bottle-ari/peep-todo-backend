@@ -54,4 +54,16 @@ public class Category {
         this.orders = orders;
         this.user = user;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category category)) return false;
+        return id != null && id.equals(category.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

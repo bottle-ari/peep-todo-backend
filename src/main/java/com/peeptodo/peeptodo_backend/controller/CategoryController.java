@@ -76,4 +76,10 @@ public class CategoryController {
         categoryService.updateOrders(categoryId, newOrders);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping(value = "/{categoryId}/orders/swap", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> swapOrders(@PathVariable Long categoryId, @RequestParam("id") Long swapId) {
+        categoryService.swapOrders(categoryId, swapId);
+        return ResponseEntity.ok().build();
+    }
 }
