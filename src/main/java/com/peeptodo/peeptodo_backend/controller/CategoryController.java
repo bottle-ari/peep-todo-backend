@@ -39,7 +39,6 @@ public class CategoryController {
      * @param categoryId 카테고리 ID
      * @return
      */
-    // TODO: 10/26/2023 api 명세에 response 타입 수정 (Void -> String)
     @PostMapping("/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);

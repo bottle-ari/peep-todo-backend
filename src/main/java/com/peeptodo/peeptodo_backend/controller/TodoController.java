@@ -6,6 +6,8 @@ import com.peeptodo.peeptodo_backend.dto.TodoRequestDto;
 import com.peeptodo.peeptodo_backend.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -81,6 +83,12 @@ public class TodoController {
     @PatchMapping(value = "/{todoId}/orders", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> updateOrders(@PathVariable Long todoId, @RequestBody Integer newOrders) {
         todoService.updateOrders(todoId, newOrders);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping(value = "/{todoId}/orders/swap", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> swapOrders(@PathVariable Long todoId, @RequestParam("id") Long swapId) {
+        todoService.swapOrders(todoId, swapId);
         return ResponseEntity.ok().build();
     }
 }
