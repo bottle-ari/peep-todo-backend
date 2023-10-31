@@ -9,7 +9,7 @@ public enum DomainUrl {
     // infra
     FRONTEND("https://peeptodo.com"),
 
-    BACKEND("http://localhost:8080");
+    BACKEND("http://localhost:8100");
     
     private final String value;
 
