@@ -40,10 +40,8 @@ public class Category {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    // code20231022193100 order 로직 구현 후 제약사항 추가 | 같은 투두 내에서는 order 중복 X
     @Column
     private Integer orders;
-
 
 
     @Builder
