@@ -80,7 +80,6 @@ public class UserService implements UserDetailsService {
     public ProfileResponseDto getProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
         User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException(("User not found!")));
         return new ProfileResponseDto(user.getName(), user.getEmail(), user.getPicture());
     }
@@ -97,6 +96,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.setPicture(newImage);
         userRepository.save(user);
+    }
+
+    public void terminate(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override

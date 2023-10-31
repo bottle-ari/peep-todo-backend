@@ -168,4 +168,30 @@ public class TodoService {
         todo.setOrders(newOrders);
         todoRepository.save(todo);
     }
+
+    public void swapOrders(Long todoId, Long swapTodoId) {
+        // todoId가 동일하면 따로 처리 X
+        if (todoId.equals(swapTodoId)) {
+            return;
+        }
+
+        Todo todo1 = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
+        Todo todo2 = todoRepository.findById(swapTodoId)
+                .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
+
+        // 다른 카테고리 소속의 투두를 수정하려는 경우
+        if (!todo1.getCategory().equals(todo2.getCategory())) {
+            throw new IllegalArgumentException("Todo category not match!");
+        }
+
+        Integer o1 = todo1.getOrders();
+        Integer o2 = todo2.getOrders();
+
+
+        todo1.setOrders(o2);
+        todo2.setOrders(o1);
+        todoRepository.saveAll(List.of(todo1, todo2)); // 동일한 트랜잭션으로 처리해서 하나가 오류나면 둘다 오류가 발생해야 함
+
+    }
 }

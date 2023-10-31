@@ -1,5 +1,6 @@
 package com.peeptodo.peeptodo_backend.domain;
 
+import com.peeptodo.peeptodo_backend.listener.TodoEntityListener;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@EntityListeners(TodoEntityListener.class)
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
