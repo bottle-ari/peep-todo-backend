@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface RoutineRepository extends JpaRepository<Routine, Long> {
     Optional<Routine> findById(Long id);
+    Optional<Routine> findFirstByCategoryIdOrderByOrdersDesc(Long categoryId);
+
 }

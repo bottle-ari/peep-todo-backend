@@ -13,6 +13,10 @@ import java.util.Optional;
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     Optional<Todo> findById(Long id);
 
+
+
+    Optional<Todo> findFirstByCategoryIdOrderByOrdersDesc(Long categoryId);
+
     @Query("SELECT t FROM Todo t WHERE t.category.id = :categoryId AND t.dates = :fromDate")
     Optional<List<Todo>> findByCategoryIdAndFromDate(@Param("categoryId") Long categoryId, @Param("fromDate") String fromDate);
 }

@@ -1,11 +1,10 @@
 package com.peeptodo.peeptodo_backend.listener;
 
 import com.peeptodo.peeptodo_backend.domain.Category;
-import com.peeptodo.peeptodo_backend.domain.Todo;
+import com.peeptodo.peeptodo_backend.domain.Routine;
 import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.repository.CategoryRepository;
-import com.peeptodo.peeptodo_backend.repository.TodoRepository;
-import com.peeptodo.peeptodo_backend.repository.UserRepository;
+import com.peeptodo.peeptodo_backend.repository.RoutineRepository;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
@@ -17,13 +16,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Objects;
-
-public class TodoEntityListener extends AbstractEntityListener {
+public class RoutineEntityListener extends AbstractEntityListener {
 
     @Lazy
     @Autowired
-    private TodoRepository todoRepository;
+    private RoutineRepository routineRepository;
 
     @Lazy
     @Autowired
@@ -35,8 +32,8 @@ public class TodoEntityListener extends AbstractEntityListener {
     @PostLoad
     @PreRemove
     public void checkSelf(Object object) {
-        assert object instanceof Todo : "object is not Todo instance";
-        Todo todo = (Todo) object;
+        assert object instanceof Routine : "object is not Routine instance";
+        Routine routine = (Routine) object;
         // 자기 자신인지 검사 (ex : 3번 user가 4번 user의 투두를 수정하는 경우)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -45,19 +42,19 @@ public class TodoEntityListener extends AbstractEntityListener {
 
 //        categoryRepository.findById(categoryId)
 
-        Category category = todo.getCategory();
-        User todoUser = category.getUser();
-        assert todoUser != null : "todoUser is null";
-        if (todoUser instanceof HibernateProxy) {
-            todoUser = (User)Hibernate.unproxy(todoUser);
-        } else if (todoUser instanceof User) {
+        Category category = routine.getCategory();
+        User routineUser = category.getUser();
+        assert routineUser != null : "routineUser is null";
+        if (routineUser instanceof HibernateProxy) {
+            routineUser = (User)Hibernate.unproxy(routineUser);
+        } else if (routineUser instanceof User) {
 
         } else {
             throw new RuntimeException("category is not HibernateProxy or Category instance");
         }
-        assert todoUser != null : "todoUser is null";
+        assert routineUser != null : "routineUser is null";
 
-        if (!userInPrincipal.equals(todoUser)) {
+        if (!userInPrincipal.equals(routineUser)) {
             throw new SecurityException("자신의 투두만 수정할 수 있습니다.");
         }
     }

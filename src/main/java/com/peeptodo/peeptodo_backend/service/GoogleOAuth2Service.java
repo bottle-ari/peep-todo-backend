@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -42,6 +43,9 @@ public class GoogleOAuth2Service {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -81,10 +85,11 @@ public class GoogleOAuth2Service {
             // 회원이 존재하지 않는다면 DB에 회원 생성시키기
             if(user == null) {
                 user = userService.createProfileWithGoogle(name, email, picture);
-                // code20231022193042 orders 방식 정해지면 빌더 수정
                 // default category 추가
+                int nextOrders = categoryService.getNextOrders(user.getId());
+                assert nextOrders == 1 : "처음 생성한 유저 -> 카테고리가 존재하지 않으므로 orders는 1이어야 합니다.";
                 Category defaultCategory = Category.builder()
-                        .user(user).name(DefaultValue.DEFAULT_CATEGORY_NAME).color(DEFAULT_CATEGORY_COLOR).emoji("").orders(1).build();
+                        .user(user).name(DefaultValue.DEFAULT_CATEGORY_NAME).color(DEFAULT_CATEGORY_COLOR).emoji("").orders(nextOrders).build();
                 categoryRepository.save(defaultCategory);
             }
 
@@ -114,6 +119,7 @@ public class GoogleOAuth2Service {
 
             // 23.10.17 : 리다이렉트 -> 프론트엔드에서 백엔드로 수정
             //            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.FRONTEND.getValue() + "/scheduled_todo");
+
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.BACKEND.getValue() + "/");
 
             URI uri = uriBuilder.build().toUri();

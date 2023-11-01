@@ -2,23 +2,22 @@ package com.peeptodo.peeptodo_backend.service;
 
 import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.domain.Routine;
-import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.repository.RoutineRepository;
 import com.peeptodo.peeptodo_backend.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
-public class RoutineService {
+public class RoutineService implements OrdersService {
 
     @Autowired
     private RoutineRepository routineRepository;
 
     public void swapOrders(Long routineId, Long swapRoutineId) {
-        // TODO: 10/31/2023 아래 내용 로우틴에 맞게 수정
         Routine routine = routineRepository.findById(routineId)
                 .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
         Routine swapRoutine = routineRepository.findById(swapRoutineId)
@@ -42,5 +41,10 @@ public class RoutineService {
         routineRepository.saveAll(List.of(routine, swapRoutine)); // 동일한 트랜잭션으로 처리해서 하나가 오류나면 둘다 오류가 발생해야 함
     }
 
+    @Override
+    public int getNextOrders(Long categoryId) {
+        Optional<Routine> maxOrderRoutine = routineRepository.findFirstByCategoryIdOrderByOrdersDesc(categoryId);
+        return maxOrderRoutine.map(routine -> routine.getOrders() + 1).orElse(1);
+    }
 
 }

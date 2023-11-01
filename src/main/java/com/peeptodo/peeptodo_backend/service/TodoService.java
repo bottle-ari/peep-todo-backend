@@ -3,7 +3,6 @@ package com.peeptodo.peeptodo_backend.service;
 import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.domain.Reminder;
 import com.peeptodo.peeptodo_backend.domain.Todo;
-import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.dto.CategoryResponseDto;
 import com.peeptodo.peeptodo_backend.dto.ScheduledTodoResponseDto;
 import com.peeptodo.peeptodo_backend.dto.TodoRequestDto;
@@ -18,10 +17,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class TodoService {
+public class TodoService implements OrdersService{
     @Autowired
     TodoRepository todoRepository;
 
@@ -33,6 +33,14 @@ public class TodoService {
 
     @Autowired
     UserRepository userRepository;
+
+
+    @Override
+    public int getNextOrders(Long categoryId) {
+        Optional<Todo> maxOrderTodo = todoRepository.findFirstByCategoryIdOrderByOrdersDesc(categoryId);
+        return maxOrderTodo.map(todo -> todo.getOrders() + 1).orElse(1);
+    }
+
 
     //Create
     public Todo createTodo(TodoRequestDto requestDto) {

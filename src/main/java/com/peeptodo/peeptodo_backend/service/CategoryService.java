@@ -16,10 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryService {
+public class CategoryService implements OrdersService{
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -97,7 +98,12 @@ public class CategoryService {
         category.setOrders(o2);
         swapCategory.setOrders(o1);
         categoryRepository.saveAll(List.of(category, swapCategory)); // 동일한 트랜잭션으로 처리해서 하나가 오류나면 둘다 오류가 발생해야 함
+    }
 
+    @Override
+    public int getNextOrders(Long userId) {
+        Optional<Category> maxCategory = categoryRepository.findFirstByUserIdOrderByOrdersDesc(userId);
+        return maxCategory.map(category -> category.getOrders() + 1).orElse(1);
     }
 
 

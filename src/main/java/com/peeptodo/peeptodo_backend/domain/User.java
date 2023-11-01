@@ -24,10 +24,11 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false)
+    // Authentication이 User Name을 이용하기 때문에 이메일이 고유값이 되어야 함
+    @Column(nullable = false, unique = true)
     private  String email;
 
     @Column

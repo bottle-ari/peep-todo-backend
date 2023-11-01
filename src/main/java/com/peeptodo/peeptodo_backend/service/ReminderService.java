@@ -1,6 +1,5 @@
 package com.peeptodo.peeptodo_backend.service;
 
-import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.domain.Reminder;
 import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.repository.ReminderRepository;
@@ -9,13 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
-public class ReminderService {
+public class ReminderService implements OrdersService{
 
     @Autowired
     private ReminderRepository reminderRepository;
+
+    @Override
+    public int getNextOrders(Long userId) {
+        Optional<Reminder> maxOrderReminder = reminderRepository.findFirstByUserIdOrderByOrdersDesc(userId);
+        return maxOrderReminder.map(reminder -> reminder.getOrders() + 1).orElse(1);
+    }
 
     public void swapOrders(Long reminderId, Long swapReminderId) {
         Reminder reminder = reminderRepository.findById(reminderId)

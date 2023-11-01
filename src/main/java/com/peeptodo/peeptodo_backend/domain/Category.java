@@ -28,7 +28,8 @@ public class Category {
     //    @Column(nullable = false, columnDefinition = "default '#000000'") -> 이렇게 하면 ddl 생성이 안됨..??
     @Column(nullable = false)
     // code20231022204022
-    @Check(constraints = "color LIKE '^#[A-Fa-f0-9]{6}$'")
+//    @Check(constraints = "color LIKE '#[0-9A-Fa-f]{6}'") -> 문법 오류
+    @Check(constraints = "REGEXP_LIKE(color, '^#[0-9A-Fa-f]{6}$')")
     private String color;
 
 

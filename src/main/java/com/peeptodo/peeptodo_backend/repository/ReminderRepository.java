@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ReminderRepository extends JpaRepository<Reminder, Long> {
     Optional<Reminder> findById(Long id);
+    Optional<Reminder> findFirstByUserIdOrderByOrdersDesc(Long userId);
 }

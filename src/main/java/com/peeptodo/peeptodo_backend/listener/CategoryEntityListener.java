@@ -30,7 +30,7 @@ public class CategoryEntityListener extends AbstractEntityListener {
         if (categoryCount < 2) throw new CategoryRemoveException("카테고리 삭제를 위해서는 카테고리는 최소 2개 이상이어야 합니다.");
     }
 
-    @PrePersist
+//    @PrePersist -> 디폴트 카테고리 생성 시점이 authentication을 받지 못한 시점이라 생성이 안돼서 prepersist는 임시로 제거
     @PreUpdate
     @PostLoad
     @Override
