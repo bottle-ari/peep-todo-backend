@@ -29,8 +29,8 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     // 지연된 투두 -> dates속성이 지금보다 이전이면서 completed_at이 null인 투두
     @Query("SELECT t FROM Todo t WHERE t.category.id = :categoryId AND " +
-            "t.dates <= to_timestamp(:toCompletedAt, 'YYYY-MM-DD\"T\"HH24:MI:SS') and completed_at is null")
-    Optional<List<Todo>> findByCategoryIdAndToCompletedAt(@Param("categoryId") Long categoryId, @Param("toCompletedAt") String toCompletedAt);
+            "t.dates <= to_timestamp(:toDate, 'YYYY-MM-DD\"T\"HH24:MI:SS') and completed_at is null")
+    Optional<List<Todo>> findByCategoryIdAndToCompletedAt(@Param("categoryId") Long categoryId, @Param("toDate") String toDate);
 
     @Query("SELECT t FROM Todo t WHERE t.category.id = :categoryId AND " +
             "t.dates >= to_timestamp(:fromDate, 'YYYY-MM-DD\"T\"HH24:MI:SS') AND " +

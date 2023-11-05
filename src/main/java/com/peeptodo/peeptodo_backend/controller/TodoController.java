@@ -36,7 +36,6 @@ public class TodoController {
 //        return ResponseEntity.ok().body(count.toString:());
 //    }
 
-    //http://localhost:8080/api/todos/scheduled/1?from=20230908&to=20230910
     @GetMapping(value = "/scheduled", produces = "application/json;charset=UTF-8")
     public ResponseEntity<ScheduledTodoResponseDto> getScheduled(@RequestParam("from") String fromDate, @RequestParam("to") String toDate) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,18 +52,36 @@ public class TodoController {
      * dates컬럼이 "현재 날짜"보다 이전이면서 completed_at이 null인경우
      * @return
      */
+    // TODO: 11/5/2023 request param으로 overdue날짜 넣는 것도 추가 -> 노션 명세에도 적기
     @GetMapping(value = "/overdue", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<ScheduledTodoResponseDto> getOverdue() {
+    public ResponseEntity<ScheduledTodoResponseDto> getOverdue(@RequestParam("to") String toDate) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // TODO: 11/5/2023 여기에서 param이 없을 때 처리
         Object principal = authentication.getPrincipal();
         assert principal instanceof User : "Authentication.principal is not User instance";
         User userInPrincipal = (User) principal;
         Long userId = userInPrincipal.getId();
-        // TODO: 11/5/2023 now대신에 나중에 해외 확장할 거 고려해서 지역 포맷 넣어서 얻을 수 있게 하기
-        LocalDateTime now = DateUtils.getNowDateTime();
-        ScheduledTodoResponseDto responseDto = todoService.getOverdueTodo(userId,now);
+
+        if (toDate.isEmpty()) {
+            LocalDateTime now = DateUtils.getNowDateTime();
+            toDate = DateUtils.convertLocalDateTimeToString(now);
+        }
+
+        ScheduledTodoResponseDto responseDto = todoService.getOverdueTodo(userId,toDate);
         return ResponseEntity.ok(responseDto);
     }
+
+
+//    /**
+//     * "현재 시간"을 기준으로 지연된 todo
+//     * @return
+//     */
+//    @GetMapping(value = "/overdue", produces = "application/json;charset=UTF-8")
+//    public ResponseEntity<ScheduledTodoResponseDto> getOverdue() {
+//        LocalDateTime now = DateUtils.getNowDateTime();
+//        String toDateStr = DateUtils.convertLocalDateTimeToString(now);
+//        return getOverdue(toDateStr);
+//    }
 
 
     @PostMapping("/{todoId}")

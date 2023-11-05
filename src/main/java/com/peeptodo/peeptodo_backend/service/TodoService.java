@@ -89,7 +89,7 @@ public class TodoService implements OrdersService{
      * @param toCompletedAt 현재 시간 (지연 된 투두 판단 시점 -> 테스트 하는 경우가 아니라면 현재 시간)
      * @return
      */
-    public ScheduledTodoResponseDto getOverdueTodo(Long userId, LocalDateTime toCompletedAt) {
+    public ScheduledTodoResponseDto getOverdueTodo(Long userId, String toDate) {
         List<Category> categories = categoryRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
 
@@ -103,8 +103,9 @@ public class TodoService implements OrdersService{
             categoryResponseDto.setEmoji(category.getEmoji());
             categoryResponseDto.setOrders(category.getOrders());
 
-            String toCompletedAtStr = DateUtils.convertLocalDateTimeToString(toCompletedAt);
-            List<Todo> todos = todoRepository.findByCategoryIdAndToCompletedAt(category.getId(), toCompletedAtStr)
+
+
+            List<Todo> todos = todoRepository.findByCategoryIdAndToCompletedAt(category.getId(), toDate)
                     .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
 
             List<TodoRequestDto> todoRequestDtos = makeTodoRequestDtos(todos);
