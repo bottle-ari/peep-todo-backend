@@ -16,7 +16,7 @@ public class TodoRequestDto {
     private String name;
     private LocalDateTime completed_at;
     private String sub_todo;
-    private String dates;
+    private LocalDateTime dates;
     private Integer priority;
     private String memo;
     private Integer orders;
@@ -24,7 +24,7 @@ public class TodoRequestDto {
     private Long reminder_id;
 
     @Builder
-    public TodoRequestDto(String name, LocalDateTime completed_at, String sub_todo, String dates, Integer priority, String memo, Integer orders, Long category_id, Long reminder_id) {
+    public TodoRequestDto(String name, LocalDateTime completed_at, String sub_todo, LocalDateTime dates, Integer priority, String memo, Integer orders, Long category_id, Long reminder_id) {
         this.name = name;
         this.completed_at = completed_at;
         this.sub_todo = sub_todo;

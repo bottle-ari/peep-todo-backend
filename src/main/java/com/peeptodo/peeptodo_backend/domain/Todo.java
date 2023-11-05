@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -31,7 +32,7 @@ public class Todo {
     private String sub_todo;
 
     @Column
-    private String dates;
+    private LocalDateTime dates;
 
     @Column
     private Integer priority;
@@ -52,7 +53,7 @@ public class Todo {
     private Reminder reminder;
 
     @Builder
-    public Todo(String name, LocalDateTime completed_at, String sub_todo, String dates, Integer priority, String memo, Integer orders, Category category, Reminder reminder) {
+    public Todo(String name, LocalDateTime completed_at, String sub_todo, LocalDateTime dates, Integer priority, String memo, Integer orders, Category category, Reminder reminder) {
         this.name = name;
         this.completed_at = completed_at;
         this.sub_todo = sub_todo;

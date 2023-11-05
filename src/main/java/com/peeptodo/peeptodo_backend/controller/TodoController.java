@@ -72,7 +72,7 @@ public class TodoController {
     }
 
     @PatchMapping(value = "/{todoId}/date", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Void> updateDates(@PathVariable Long todoId, @RequestBody String newDates) {
+    public ResponseEntity<Void> updateDates(@PathVariable Long todoId, @RequestBody LocalDateTime newDates) {
         todoService.updateDates(todoId, newDates);
         return ResponseEntity.ok().build();
     }

@@ -94,7 +94,8 @@ public class TodoService implements OrdersService{
             categoryResponseDto.setOrders(category.getOrders());
 
             // code20231105175746 현재 fromDate 하루에 해당하는 데이터만 뽑아냄. 여러 날짜로 변경하기.
-            List<Todo> todos = todoRepository.findByCategoryIdAndFromDate(category.getId(), fromDate)
+            // TODO: 11/5/2023 "기능 테스트" 필요함. 원하는 기능을 하는지
+            List<Todo> todos = todoRepository.findByCategoryIdAndFromDateAndToDate(category.getId(), fromDate,toDate)
                     .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
 
             List<TodoRequestDto> todoRequestDtos = todos.stream().map(
@@ -155,7 +156,7 @@ public class TodoService implements OrdersService{
         todoRepository.save(todo);
     }
 
-    public void updateDates(Long id, String newDates) {
+    public void updateDates(Long id, LocalDateTime newDates) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
         todo.setDates(newDates);
