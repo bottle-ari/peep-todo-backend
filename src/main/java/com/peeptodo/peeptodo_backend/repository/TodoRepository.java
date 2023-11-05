@@ -36,4 +36,8 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
             "t.dates >= to_timestamp(:fromDate, 'YYYY-MM-DD\"T\"HH24:MI:SS') AND " +
             "t.dates <= to_timestamp(:toDate, 'YYYY-MM-DD\"T\"HH24:MI:SS')")
     Optional<List<Todo>> findByCategoryIdAndFromDateAndToDate(@Param("categoryId") Long categoryId, @Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+    @Query("SELECT t FROM Todo t WHERE t.category.id = :categoryId AND t.dates is null")
+    Optional<List<Todo>> findByCategoryIdAndDateIsNull(@Param("categoryId") Long categoryId);
+
 }

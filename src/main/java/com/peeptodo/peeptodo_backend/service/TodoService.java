@@ -83,10 +83,44 @@ public class TodoService implements OrdersService{
 
     //Read
 
+
+    public ScheduledTodoResponseDto getConstantTodo(Long userId) {
+        List<Category> categories = categoryRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
+
+        List<TodoResponseDto> todoResponseDtos = new ArrayList<>();
+
+        for (Category category : categories) {
+            CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
+            categoryResponseDto.setId(category.getId());
+            categoryResponseDto.setName(category.getName());
+            categoryResponseDto.setColor(category.getColor());
+            categoryResponseDto.setEmoji(category.getEmoji());
+            categoryResponseDto.setOrders(category.getOrders());
+
+            List<Todo> todos = todoRepository.findByCategoryIdAndDateIsNull(category.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
+
+            List<TodoRequestDto> todoRequestDtos = makeTodoRequestDtos(todos);
+            TodoResponseDto todoResponseDto = TodoResponseDto.builder()
+                    .category(categoryResponseDto)
+                    .todoList(todoRequestDtos)
+                    .build();
+            todoResponseDtos.add(todoResponseDto);
+        }
+
+        return ScheduledTodoResponseDto.builder()
+                .content(todoResponseDtos)
+                .build();
+
+    }
+
+
+
     /**
      *
      * @param userId 유저 아이디
-     * @param toCompletedAt 현재 시간 (지연 된 투두 판단 시점 -> 테스트 하는 경우가 아니라면 현재 시간)
+     * @param toDate 현재 시간 (지연 된 투두 판단 시점 -> 테스트 하는 경우가 아니라면 현재 시간)
      * @return
      */
     public ScheduledTodoResponseDto getOverdueTodo(Long userId, String toDate) {
