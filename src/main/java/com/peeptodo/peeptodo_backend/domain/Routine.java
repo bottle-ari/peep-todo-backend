@@ -32,7 +32,7 @@ public class Routine {
     @Column
     private String sub_todo;
 
-    @Column
+    @Column(nullable = false)
     private Integer orders;
 
     @ManyToOne

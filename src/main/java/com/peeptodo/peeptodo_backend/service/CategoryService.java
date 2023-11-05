@@ -35,11 +35,16 @@ public class CategoryService implements OrdersService{
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
+        Integer orders = requestDto.getOrders();
+        if (orders == null) {
+            orders = getNextOrders(user.getId());
+        }
+
         Category category = new Category();
         category.setName(requestDto.getName());
         category.setColor(requestDto.getColor());
         category.setEmoji(requestDto.getEmoji());
-        category.setOrders(requestDto.getOrders());
+        category.setOrders(orders);
         category.setUser(user);
         return categoryRepository.save(category);
     }

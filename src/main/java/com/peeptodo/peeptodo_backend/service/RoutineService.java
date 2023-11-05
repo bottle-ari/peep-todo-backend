@@ -2,13 +2,21 @@ package com.peeptodo.peeptodo_backend.service;
 
 import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.domain.Routine;
+import com.peeptodo.peeptodo_backend.domain.User;
+import com.peeptodo.peeptodo_backend.dto.RoutineRequestDto;
+import com.peeptodo.peeptodo_backend.dto.RoutineResponseDto;
+import com.peeptodo.peeptodo_backend.dto.RoutinesResponseDto;
 import com.peeptodo.peeptodo_backend.repository.RoutineRepository;
+import com.peeptodo.peeptodo_backend.repository.UserRepository;
 import com.peeptodo.peeptodo_backend.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -16,6 +24,33 @@ public class RoutineService implements OrdersService {
 
     @Autowired
     private RoutineRepository routineRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    public Routine createRoutine(RoutineRequestDto requestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+
+        Integer orders = requestDto.getOrders();
+        if (orders == null) {
+            orders = getNextOrders(user.getId());
+        }
+
+        Routine routine = new Routine();;
+        routine.setName(requestDto.getName());
+        routine.setIs_active(requestDto.getIs_active());
+        routine.setPriority(requestDto.getPriority());
+        routine.setRepeat_condition(requestDto.getRepeat_condition());
+        routine.setSub_todo(requestDto.getSub_todo());
+        routine.setOrders(orders);
+        routine.setCategory(requestDto.getCategory());
+        routine.setReminder(requestDto.getReminder());
+        return routineRepository.save(routine);
+
+    }
 
     public void swapOrders(Long routineId, Long swapRoutineId) {
         Routine routine = routineRepository.findById(routineId)
@@ -45,6 +80,30 @@ public class RoutineService implements OrdersService {
     public int getNextOrders(Long categoryId) {
         Optional<Routine> maxOrderRoutine = routineRepository.findFirstByCategoryIdOrderByOrdersDesc(categoryId);
         return maxOrderRoutine.map(routine -> routine.getOrders() + 1).orElse(1);
+    }
+
+    public List<RoutineResponseDto> getAllRoutines(Long categoryId) {
+        //  userId와 categoryId가 동일한 소속인지 검증 -> EntityListener에 구현
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+//        Long userId = user.getId();
+
+        List<Routine> routines = routineRepository.findByCategoryIdOrderByOrdersAsc(categoryId).orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        return routines.stream()
+                .map(routine -> {
+                    RoutineResponseDto dto = new RoutineResponseDto();
+                    dto.setId(routine.getId());
+                    dto.setName(routine.getName());
+                    dto.setIs_active(routine.getIs_active());
+                    dto.setPriority(routine.getPriority());
+                    dto.setRepeat_condition(routine.getRepeat_condition());
+                    dto.setSub_todo(routine.getSub_todo());
+                    dto.setOrders(routine.getOrders());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
 }

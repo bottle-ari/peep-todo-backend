@@ -54,6 +54,8 @@ public class TodoService implements OrdersService{
                     .orElseThrow(() -> new IllegalArgumentException("reminder not found!"));
         }
 
+
+
         Todo todo = new Todo();
         todo.setName(requestDto.getName());
         todo.setCompleted_at(requestDto.getCompleted_at());
@@ -61,8 +63,12 @@ public class TodoService implements OrdersService{
         todo.setDates(requestDto.getDates());
         todo.setPriority(requestDto.getPriority());
         todo.setMemo(requestDto.getMemo());
-        todo.setOrders(requestDto.getOrders());
         todo.setCategory(category);
+        Integer orders = requestDto.getOrders();
+        if (orders == null) {
+            orders = getNextOrders(category.getId());
+        }
+        todo.setOrders(orders);
         todo.setReminder(reminder);
         return todoRepository.save(todo);
     }
@@ -87,7 +93,7 @@ public class TodoService implements OrdersService{
             categoryResponseDto.setEmoji(category.getEmoji());
             categoryResponseDto.setOrders(category.getOrders());
 
-            //TODO : 현재 fromDate 하루에 해당하는 데이터만 뽑아냄. 여러 날짜로 변경하기.
+            // code20231105175746 현재 fromDate 하루에 해당하는 데이터만 뽑아냄. 여러 날짜로 변경하기.
             List<Todo> todos = todoRepository.findByCategoryIdAndFromDate(category.getId(), fromDate)
                     .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
 

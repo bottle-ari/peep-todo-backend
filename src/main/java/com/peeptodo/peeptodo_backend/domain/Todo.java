@@ -39,7 +39,7 @@ public class Todo {
     @Column
     private String memo;
 
-    @Column
+    @Column(nullable = false)
     private Integer orders;
 
     @ManyToOne

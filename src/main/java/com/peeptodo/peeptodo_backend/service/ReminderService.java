@@ -1,14 +1,20 @@
 package com.peeptodo.peeptodo_backend.service;
 
+import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.domain.Reminder;
 import com.peeptodo.peeptodo_backend.domain.User;
+import com.peeptodo.peeptodo_backend.dto.*;
 import com.peeptodo.peeptodo_backend.repository.ReminderRepository;
+import com.peeptodo.peeptodo_backend.repository.UserRepository;
 import com.peeptodo.peeptodo_backend.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -16,6 +22,30 @@ public class ReminderService implements OrdersService{
 
     @Autowired
     private ReminderRepository reminderRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    public Reminder createReminder(ReminderRequestDto requestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+        Integer orders = requestDto.getOrders();
+        if (orders == null) {
+            orders = getNextOrders(user.getId());
+        }
+        Reminder reminder = new Reminder();
+        reminder.setName(requestDto.getName());
+        reminder.setIcon(requestDto.getIcon());
+        reminder.setIf_condition(requestDto.getIf_condition());
+        reminder.setNotify_condition(requestDto.getNotify_condition());
+        reminder.setOrders(orders);
+        reminder.setUser(user);
+        return reminderRepository.save(reminder);
+
+    }
+
 
     @Override
     public int getNextOrders(Long userId) {
@@ -47,4 +77,25 @@ public class ReminderService implements OrdersService{
     }
 
 
+    public List<ReminderResponseDto> getAllReminders() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+
+        List<Reminder> reminders = reminderRepository.findByUserId(user.getId()).orElseThrow(() -> new IllegalArgumentException("User not found!"));
+        return reminders.stream()
+                .map(reminder -> {
+                    ReminderResponseDto dto = new ReminderResponseDto();
+                    dto.setId(reminder.getId());
+                    dto.setName(reminder.getName());
+                    dto.setIcon(reminder.getIcon());
+                    dto.setIf_condition(reminder.getIf_condition());
+                    dto.setNotify_condition(reminder.getNotify_condition());
+                    dto.setOrders(reminder.getOrders());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }

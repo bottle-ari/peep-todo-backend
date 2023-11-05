@@ -1,10 +1,14 @@
 package com.peeptodo.peeptodo_backend.controller;
 
 
+import com.peeptodo.peeptodo_backend.domain.Reminder;
+import com.peeptodo.peeptodo_backend.dto.*;
 import com.peeptodo.peeptodo_backend.service.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -19,4 +23,23 @@ public class ReminderController {
         reminderService.swapOrders(reminderId, swapId);
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping(value = "", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<ReminderResponseDto> createReminder(@RequestBody ReminderRequestDto requestDto) {
+        Reminder reminder = reminderService.createReminder(requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<RemindersResponseDto> getAllReminders() {
+        List<ReminderResponseDto> reminderResponseDtoList = reminderService.getAllReminders();
+        RemindersResponseDto remindersResponseDto = new RemindersResponseDto(reminderResponseDtoList);
+        return ResponseEntity.ok().body(remindersResponseDto);
+    }
+
+
+
+
+
 }

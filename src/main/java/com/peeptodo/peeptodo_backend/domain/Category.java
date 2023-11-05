@@ -41,7 +41,7 @@ public class Category {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @Column
+    @Column(nullable = false)
     private Integer orders;
 
 

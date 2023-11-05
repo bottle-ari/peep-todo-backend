@@ -25,6 +25,15 @@ public class TodoController {
         return ResponseEntity.ok().build();
     }
 
+//    @GetMapping(value = "/count", produces = "application/json;charset=UTF-8")
+//    public ResponseEntity<String> getCount(@RequestParam("start-year") Integer startYear,@RequestParam("start-month") Integer startMonth,
+//                                           @RequestParam("end-year") Integer endYear ,@RequestParam("end-month") Integer endMonth) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+//
+//        return ResponseEntity.ok().body(count.toString:());
+//    }
+
     //http://localhost:8080/api/todos/scheduled/1?from=20230908&to=20230910
     @GetMapping(value = "/scheduled/{id}", produces = "application/json;charset=UTF-8")
     public ResponseEntity<ScheduledTodoResponseDto> getScheduled(@PathVariable Long id, @RequestParam("from") String fromDate, @RequestParam("to") String toDate) {

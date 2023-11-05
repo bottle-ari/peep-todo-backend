@@ -29,7 +29,7 @@ public class Reminder {
     @Column
     private String notify_condition;
 
-    @Column
+    @Column(nullable = false)
     private Integer orders;
 
     @ManyToOne
