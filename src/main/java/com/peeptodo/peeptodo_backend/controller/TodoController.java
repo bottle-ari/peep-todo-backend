@@ -1,9 +1,11 @@
 package com.peeptodo.peeptodo_backend.controller;
 
 import com.peeptodo.peeptodo_backend.domain.Todo;
+import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.dto.ScheduledTodoResponseDto;
 import com.peeptodo.peeptodo_backend.dto.TodoRequestDto;
 import com.peeptodo.peeptodo_backend.service.TodoService;
+import com.peeptodo.peeptodo_backend.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,11 +37,35 @@ public class TodoController {
 //    }
 
     //http://localhost:8080/api/todos/scheduled/1?from=20230908&to=20230910
-    @GetMapping(value = "/scheduled/{id}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<ScheduledTodoResponseDto> getScheduled(@PathVariable Long id, @RequestParam("from") String fromDate, @RequestParam("to") String toDate) {
-        ScheduledTodoResponseDto responseDto = todoService.getScheduledTodo(id, fromDate, toDate);
+    @GetMapping(value = "/scheduled", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<ScheduledTodoResponseDto> getScheduled(@RequestParam("from") String fromDate, @RequestParam("to") String toDate) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        assert principal instanceof User : "Authentication.principal is not User instance";
+        User userInPrincipal = (User) principal;
+        Long userId = userInPrincipal.getId();
+        ScheduledTodoResponseDto responseDto = todoService.getScheduledTodo(userId, fromDate, toDate);
         return ResponseEntity.ok(responseDto);
     }
+
+    /**
+     * 지연된 투두
+     * dates컬럼이 "현재 날짜"보다 이전이면서 completed_at이 null인경우
+     * @return
+     */
+    @GetMapping(value = "/overdue", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<ScheduledTodoResponseDto> getOverdue() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        assert principal instanceof User : "Authentication.principal is not User instance";
+        User userInPrincipal = (User) principal;
+        Long userId = userInPrincipal.getId();
+        // TODO: 11/5/2023 now대신에 나중에 해외 확장할 거 고려해서 지역 포맷 넣어서 얻을 수 있게 하기
+        LocalDateTime now = DateUtils.getNowDateTime();
+        ScheduledTodoResponseDto responseDto = todoService.getOverdueTodo(userId,now);
+        return ResponseEntity.ok(responseDto);
+    }
+
 
     @PostMapping("/{todoId}")
     public ResponseEntity<Void> deleteTodo(@PathVariable Long todoId) {

@@ -11,6 +11,7 @@ import com.peeptodo.peeptodo_backend.repository.CategoryRepository;
 import com.peeptodo.peeptodo_backend.repository.ReminderRepository;
 import com.peeptodo.peeptodo_backend.repository.TodoRepository;
 import com.peeptodo.peeptodo_backend.repository.UserRepository;
+import com.peeptodo.peeptodo_backend.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,8 @@ public class TodoService implements OrdersService{
 
     @Autowired
     UserRepository userRepository;
+
+
 
 
     @Override
@@ -79,6 +82,46 @@ public class TodoService implements OrdersService{
     }
 
     //Read
+
+    /**
+     *
+     * @param userId 유저 아이디
+     * @param toCompletedAt 현재 시간 (지연 된 투두 판단 시점 -> 테스트 하는 경우가 아니라면 현재 시간)
+     * @return
+     */
+    public ScheduledTodoResponseDto getOverdueTodo(Long userId, LocalDateTime toCompletedAt) {
+        List<Category> categories = categoryRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
+
+        List<TodoResponseDto> todoResponseDtos = new ArrayList<>();
+
+        for (Category category : categories) {
+            CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
+            categoryResponseDto.setId(category.getId());
+            categoryResponseDto.setName(category.getName());
+            categoryResponseDto.setColor(category.getColor());
+            categoryResponseDto.setEmoji(category.getEmoji());
+            categoryResponseDto.setOrders(category.getOrders());
+
+            String toCompletedAtStr = DateUtils.convertLocalDateTimeToString(toCompletedAt);
+            List<Todo> todos = todoRepository.findByCategoryIdAndToCompletedAt(category.getId(), toCompletedAtStr)
+                    .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
+
+            List<TodoRequestDto> todoRequestDtos = makeTodoRequestDtos(todos);
+            TodoResponseDto todoResponseDto = TodoResponseDto.builder()
+                    .category(categoryResponseDto)
+                    .todoList(todoRequestDtos)
+                    .build();
+            todoResponseDtos.add(todoResponseDto);
+        }
+
+        return ScheduledTodoResponseDto.builder()
+                .content(todoResponseDtos)
+                .build();
+
+    }
+
+    //Read
     public ScheduledTodoResponseDto getScheduledTodo(Long userId, String fromDate, String toDate) {
         List<Category> categories = categoryRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
@@ -94,25 +137,10 @@ public class TodoService implements OrdersService{
             categoryResponseDto.setOrders(category.getOrders());
 
             // code20231105175746 현재 fromDate 하루에 해당하는 데이터만 뽑아냄. 여러 날짜로 변경하기.
-            // TODO: 11/5/2023 "기능 테스트" 필요함. 원하는 기능을 하는지
             List<Todo> todos = todoRepository.findByCategoryIdAndFromDateAndToDate(category.getId(), fromDate,toDate)
                     .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
 
-            List<TodoRequestDto> todoRequestDtos = todos.stream().map(
-                    todo -> {
-                        TodoRequestDto dto = new TodoRequestDto();
-                        dto.setName(todo.getName());
-                        dto.setCompleted_at(todo.getCompleted_at());
-                        dto.setSub_todo(todo.getSub_todo());
-                        dto.setDates(todo.getDates());
-                        dto.setPriority(todo.getPriority());
-                        dto.setMemo(todo.getMemo());
-                        dto.setOrders(todo.getOrders());
-                        dto.setCategory_id(todo.getCategory().getId());
-                        if(todo.getReminder() != null) dto.setReminder_id(todo.getReminder().getId());
-                        return dto;
-                    }
-            ).collect(Collectors.toList());
+            List<TodoRequestDto> todoRequestDtos = makeTodoRequestDtos(todos);
             TodoResponseDto todoResponseDto = TodoResponseDto.builder()
                     .category(categoryResponseDto)
                     .todoList(todoRequestDtos)
@@ -123,6 +151,24 @@ public class TodoService implements OrdersService{
         return ScheduledTodoResponseDto.builder()
                 .content(todoResponseDtos)
                 .build();
+    }
+
+    private static List<TodoRequestDto> makeTodoRequestDtos(List<Todo> todos) {
+        return todos.stream().map(
+                todo -> {
+                    TodoRequestDto dto = new TodoRequestDto();
+                    dto.setName(todo.getName());
+                    dto.setCompleted_at(todo.getCompleted_at());
+                    dto.setSub_todo(todo.getSub_todo());
+                    dto.setDates(todo.getDates());
+                    dto.setPriority(todo.getPriority());
+                    dto.setMemo(todo.getMemo());
+                    dto.setOrders(todo.getOrders());
+                    dto.setCategory_id(todo.getCategory().getId());
+                    if (todo.getReminder() != null) dto.setReminder_id(todo.getReminder().getId());
+                    return dto;
+                }
+        ).collect(Collectors.toList());
     }
 
     //Update
