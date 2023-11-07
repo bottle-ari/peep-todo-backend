@@ -1,5 +1,7 @@
 package com.peeptodo.peeptodo_backend.domain;
 
+import com.peeptodo.peeptodo_backend.domain.subtodo.SubTodoConverter;
+import com.peeptodo.peeptodo_backend.domain.subtodo.SubTodos;
 import com.peeptodo.peeptodo_backend.listener.TodoEntityListener;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -11,6 +13,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,8 +32,8 @@ public class Todo {
     @Column
     private LocalDateTime completed_at;
 
-    @Column
-    private String sub_todo;
+    @Convert(converter= SubTodoConverter.class)
+    private SubTodos sub_todo;
 
     @Column
     private LocalDateTime dates;
@@ -52,11 +56,21 @@ public class Todo {
     @JoinColumn(name = "reminder_id")
     private Reminder reminder;
 
+
+
+    public void setSub_todo(List<String> sub_todo_list) {
+        this.sub_todo = new SubTodos(sub_todo_list);
+    }
+
+    public List<String> getSub_todo() {
+        return this.sub_todo.subTodoStrList();
+    }
+
     @Builder
-    public Todo(String name, LocalDateTime completed_at, String sub_todo, LocalDateTime dates, Integer priority, String memo, Integer orders, Category category, Reminder reminder) {
+    public Todo(String name, LocalDateTime completed_at, List<String> sub_todo, LocalDateTime dates, Integer priority, String memo, Integer orders, Category category, Reminder reminder) {
         this.name = name;
         this.completed_at = completed_at;
-        this.sub_todo = sub_todo;
+        this.sub_todo = new SubTodos(sub_todo);
         this.dates = dates;
         this.priority = priority;
         this.memo = memo;

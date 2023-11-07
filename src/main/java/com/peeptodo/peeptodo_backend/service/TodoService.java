@@ -6,12 +6,11 @@ import com.peeptodo.peeptodo_backend.domain.Todo;
 import com.peeptodo.peeptodo_backend.dto.CategoryResponseDto;
 import com.peeptodo.peeptodo_backend.dto.ScheduledTodoResponseDto;
 import com.peeptodo.peeptodo_backend.dto.TodoRequestDto;
-import com.peeptodo.peeptodo_backend.dto.TodoResponseDto;
+import com.peeptodo.peeptodo_backend.dto.TodoListResponseDto;
 import com.peeptodo.peeptodo_backend.repository.CategoryRepository;
 import com.peeptodo.peeptodo_backend.repository.ReminderRepository;
 import com.peeptodo.peeptodo_backend.repository.TodoRepository;
 import com.peeptodo.peeptodo_backend.repository.UserRepository;
-import com.peeptodo.peeptodo_backend.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +87,7 @@ public class TodoService implements OrdersService{
         List<Category> categories = categoryRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
 
-        List<TodoResponseDto> todoResponseDtos = new ArrayList<>();
+        List<TodoListResponseDto> todoListResponseDtos = new ArrayList<>();
 
         for (Category category : categories) {
             CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
@@ -102,15 +101,15 @@ public class TodoService implements OrdersService{
                     .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
 
             List<TodoRequestDto> todoRequestDtos = makeTodoRequestDtos(todos);
-            TodoResponseDto todoResponseDto = TodoResponseDto.builder()
+            TodoListResponseDto todoListResponseDto = TodoListResponseDto.builder()
                     .category(categoryResponseDto)
                     .todoList(todoRequestDtos)
                     .build();
-            todoResponseDtos.add(todoResponseDto);
+            todoListResponseDtos.add(todoListResponseDto);
         }
 
         return ScheduledTodoResponseDto.builder()
-                .content(todoResponseDtos)
+                .content(todoListResponseDtos)
                 .build();
 
     }
@@ -127,7 +126,7 @@ public class TodoService implements OrdersService{
         List<Category> categories = categoryRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
 
-        List<TodoResponseDto> todoResponseDtos = new ArrayList<>();
+        List<TodoListResponseDto> todoListResponseDtos = new ArrayList<>();
 
         for (Category category : categories) {
             CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
@@ -143,15 +142,15 @@ public class TodoService implements OrdersService{
                     .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
 
             List<TodoRequestDto> todoRequestDtos = makeTodoRequestDtos(todos);
-            TodoResponseDto todoResponseDto = TodoResponseDto.builder()
+            TodoListResponseDto todoListResponseDto = TodoListResponseDto.builder()
                     .category(categoryResponseDto)
                     .todoList(todoRequestDtos)
                     .build();
-            todoResponseDtos.add(todoResponseDto);
+            todoListResponseDtos.add(todoListResponseDto);
         }
 
         return ScheduledTodoResponseDto.builder()
-                .content(todoResponseDtos)
+                .content(todoListResponseDtos)
                 .build();
 
     }
@@ -161,7 +160,7 @@ public class TodoService implements OrdersService{
         List<Category> categories = categoryRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found!"));
 
-        List<TodoResponseDto> todoResponseDtos = new ArrayList<>();
+        List<TodoListResponseDto> todoListResponseDtos = new ArrayList<>();
 
         for (Category category : categories) {
             CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
@@ -176,15 +175,15 @@ public class TodoService implements OrdersService{
                     .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
 
             List<TodoRequestDto> todoRequestDtos = makeTodoRequestDtos(todos);
-            TodoResponseDto todoResponseDto = TodoResponseDto.builder()
+            TodoListResponseDto todoListResponseDto = TodoListResponseDto.builder()
                     .category(categoryResponseDto)
                     .todoList(todoRequestDtos)
                     .build();
-            todoResponseDtos.add(todoResponseDto);
+            todoListResponseDtos.add(todoListResponseDto);
         }
 
         return ScheduledTodoResponseDto.builder()
-                .content(todoResponseDtos)
+                .content(todoListResponseDtos)
                 .build();
     }
 
@@ -230,7 +229,7 @@ public class TodoService implements OrdersService{
         todoRepository.save(todo);
     }
 
-    public void updateSubTodo(Long id, String newSubTodo) {
+    public void updateSubTodo(Long id, List<String> newSubTodo) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Todo not found!"));
         todo.setSub_todo(newSubTodo);

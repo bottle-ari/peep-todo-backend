@@ -4,6 +4,9 @@ import com.peeptodo.peeptodo_backend.domain.Todo;
 import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.dto.ScheduledTodoResponseDto;
 import com.peeptodo.peeptodo_backend.dto.TodoRequestDto;
+import com.peeptodo.peeptodo_backend.dto.TodoListResponseDto;
+import com.peeptodo.peeptodo_backend.dto.TodoResponseDto;
+import com.peeptodo.peeptodo_backend.repository.TodoRepository;
 import com.peeptodo.peeptodo_backend.service.TodoService;
 import com.peeptodo.peeptodo_backend.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -20,6 +24,9 @@ public class TodoController {
 
     @Autowired
     TodoService todoService;
+
+    @Autowired
+    TodoRepository todoRepository;
 
     @PostMapping(value = "/", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> createTodo(@RequestBody TodoRequestDto requestDto) {
@@ -35,6 +42,7 @@ public class TodoController {
 //
 //        return ResponseEntity.ok().body(count.toString:());
 //    }
+
 
     @GetMapping(value = "/scheduled", produces = "application/json;charset=UTF-8")
     public ResponseEntity<ScheduledTodoResponseDto> getScheduled(@RequestParam("from") String fromDate, @RequestParam("to") String toDate) {
@@ -100,6 +108,14 @@ public class TodoController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(value = "/{todoId}")
+    public ResponseEntity<TodoResponseDto> getTodo(@PathVariable Long todoId) {
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() -> new IllegalArgumentException("해당 투두가 없습니다."));
+        TodoResponseDto responseDto = new TodoResponseDto(todo.getId(), todo.getName(), todo.getCompleted_at(), todo.getSub_todo(),todo.getDates(),todo.getPriority(),todo.getMemo(),todo.getOrders(),todo.getCategory().getId());
+        return ResponseEntity.ok(responseDto);
+    }
+
+
     @PatchMapping(value = "/{todoId}/name", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> updateName(@PathVariable Long todoId, @RequestBody String newName) {
         todoService.updateName(todoId, newName);
@@ -119,7 +135,7 @@ public class TodoController {
     }
 
     @PatchMapping(value = "/{todoId}/subtodo", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Void> updateSubTodo(@PathVariable Long todoId, @RequestBody String newSubTodo) {
+    public ResponseEntity<Void> updateSubTodo(@PathVariable Long todoId, @RequestBody List<String> newSubTodo) {
         todoService.updateSubTodo(todoId, newSubTodo);
         return ResponseEntity.ok().build();
     }

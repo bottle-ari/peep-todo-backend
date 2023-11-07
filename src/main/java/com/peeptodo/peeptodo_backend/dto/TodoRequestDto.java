@@ -2,12 +2,14 @@ package com.peeptodo.peeptodo_backend.dto;
 
 import com.peeptodo.peeptodo_backend.domain.Category;
 import com.peeptodo.peeptodo_backend.domain.Reminder;
+import com.peeptodo.peeptodo_backend.domain.subtodo.SubTodos;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 public class TodoRequestDto {
     private String name;
     private LocalDateTime completed_at;
-    private String sub_todo;
+    private List<String> sub_todo;
     private LocalDateTime dates;
     private Integer priority;
     private String memo;
@@ -23,8 +25,9 @@ public class TodoRequestDto {
     private Long category_id;
     private Long reminder_id;
 
+
     @Builder
-    public TodoRequestDto(String name, LocalDateTime completed_at, String sub_todo, LocalDateTime dates, Integer priority, String memo, Integer orders, Long category_id, Long reminder_id) {
+    public TodoRequestDto(String name, LocalDateTime completed_at, List<String> sub_todo, LocalDateTime dates, Integer priority, String memo, Integer orders, Long category_id, Long reminder_id) {
         this.name = name;
         this.completed_at = completed_at;
         this.sub_todo = sub_todo;
