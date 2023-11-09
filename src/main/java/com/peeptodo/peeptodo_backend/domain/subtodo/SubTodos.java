@@ -54,7 +54,7 @@ public class SubTodos  {
 
     private record SubTodo(String subTodoStr) {
         public String getColumnString() {
-            // code20231107211012
+            // code20231107211012 - 따옴표 등의 특수 문자 점검 및 처리 필요
             return subTodoStr;
         }
     }

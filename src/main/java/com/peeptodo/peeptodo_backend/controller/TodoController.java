@@ -28,7 +28,7 @@ public class TodoController {
     @Autowired
     TodoRepository todoRepository;
 
-    @PostMapping(value = "/", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Void> createTodo(@RequestBody TodoRequestDto requestDto) {
         Todo newTodo = todoService.createTodo(requestDto);
         return ResponseEntity.ok().build();

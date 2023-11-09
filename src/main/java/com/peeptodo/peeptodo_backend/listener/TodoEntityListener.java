@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Objects;
 
 public class TodoEntityListener extends AbstractEntityListener {
 
@@ -42,7 +41,6 @@ public class TodoEntityListener extends AbstractEntityListener {
         Object principal = authentication.getPrincipal();
         assert principal instanceof User : "Authentication.principal is not User instance";
         User userInPrincipal = (User) principal;
-
 //        categoryRepository.findById(categoryId)
 
         Category category = todo.getCategory();
@@ -61,5 +59,4 @@ public class TodoEntityListener extends AbstractEntityListener {
             throw new SecurityException("자신의 투두만 수정할 수 있습니다.");
         }
     }
-
 }
