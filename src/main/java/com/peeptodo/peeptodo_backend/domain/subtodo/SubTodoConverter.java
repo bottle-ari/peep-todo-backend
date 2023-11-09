@@ -21,6 +21,7 @@ public class SubTodoConverter implements AttributeConverter<SubTodos,String> {
         if (dbData.isEmpty()) {
             return new SubTodos();
         }
+        // TODO: 11/7/2023 substring 안하고 다른 좋은 방법..?
         dbData = dbData.substring(1, dbData.length() - 1); // 맨 앞과 맨 뒤의 " 제거
         String[] split = dbData.split("\",\"");
         return new SubTodos(Arrays.asList(split));

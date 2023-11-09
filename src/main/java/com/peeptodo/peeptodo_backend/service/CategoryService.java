@@ -1,6 +1,7 @@
 package com.peeptodo.peeptodo_backend.service;
 
 import com.peeptodo.peeptodo_backend.domain.Category;
+import com.peeptodo.peeptodo_backend.domain.Routine;
 import com.peeptodo.peeptodo_backend.domain.Todo;
 import com.peeptodo.peeptodo_backend.domain.User;
 import com.peeptodo.peeptodo_backend.dto.CategoryRequestDto;
@@ -140,4 +141,5 @@ public class CategoryService implements OrdersService{
         category.setOrders(newOrders);
         categoryRepository.save(category);
     }
+
 }

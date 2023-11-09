@@ -82,4 +82,6 @@ public class CategoryController {
         categoryService.swapOrders(categoryId, swapId);
         return ResponseEntity.ok().build();
     }
+
+
 }

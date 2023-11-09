@@ -82,6 +82,14 @@ public class RoutineService implements OrdersService {
         return maxOrderRoutine.map(routine -> routine.getOrders() + 1).orElse(1);
     }
 
+
+    public void updateName(Long id, String newName) {
+        Routine routine = routineRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        routine.setName(newName);
+        routineRepository.save(routine);
+    }
+
     public List<RoutineResponseDto> getAllRoutines(Long categoryId) {
         //  userId와 categoryId가 동일한 소속인지 검증 -> EntityListener에 구현
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -106,4 +114,44 @@ public class RoutineService implements OrdersService {
                 .collect(Collectors.toList());
     }
 
+    public void updateIsActive(Long routineId, Boolean isActive) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        routine.setIs_active(isActive);
+        routineRepository.save(routine);
+    }
+
+    public void updatePriority(Long routineId, Integer priority) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        routine.setPriority(priority);
+        routineRepository.save(routine);
+    }
+
+    public void updateRepeatCondition(Long routineId, String repeatCondition) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        routine.setRepeat_condition(repeatCondition);
+        routineRepository.save(routine);
+    }
+
+    public void updateSubTodo(Long routineId, List<String> subTodoList) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        routine.setSub_todo(subTodoList);
+        routineRepository.save(routine);
+    }
+
+    public void updateOrders(Long routineId, Integer order) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        routine.setOrders(order);
+        routineRepository.save(routine);
+    }
+
+    public void deleteCategory(Long routineId) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found!"));
+        routineRepository.delete(routine);
+    }
 }
