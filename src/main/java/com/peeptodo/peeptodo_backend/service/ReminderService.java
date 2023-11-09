@@ -98,4 +98,45 @@ public class ReminderService implements OrdersService{
                 })
                 .collect(Collectors.toList());
     }
+
+    public void updateName(Long reminderId, String newName) {
+        Reminder reminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new IllegalArgumentException("Reminder not found!"));
+        reminder.setName(newName);
+        reminderRepository.save(reminder);
+    }
+
+    public void updateOrders(Long reminderId, Integer orders) {
+        Reminder reminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new IllegalArgumentException("Reminder not found!"));
+        reminder.setOrders(orders);
+        reminderRepository.save(reminder);
+    }
+
+    public void deleteReminder(Long reminderId) {
+        Reminder reminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new IllegalArgumentException("Reminder not found!"));
+        reminderRepository.delete(reminder);
+    }
+
+    public void updateIcon(Long reminderId, String newIcon) {
+        Reminder reminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new IllegalArgumentException("Reminder not found!"));
+        reminder.setIcon(newIcon);
+        reminderRepository.save(reminder);
+    }
+
+    public void updateIfCondition(Long reminderId, String newIfCondition) {
+        Reminder reminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new IllegalArgumentException("Reminder not found!"));
+        reminder.setIf_condition(newIfCondition);
+        reminderRepository.save(reminder);
+    }
+
+    public void updateNotifyCondition(Long reminderId, String notifyCondition) {
+        Reminder reminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new IllegalArgumentException("Reminder not found!"));
+        reminder.setNotify_condition(notifyCondition);
+        reminderRepository.save(reminder);
+    }
 }
