@@ -25,7 +25,9 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
-
+    
+    
+    // 인증..
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
@@ -43,7 +45,15 @@ public class JwtFilter extends OncePerRequestFilter {
             String jwt = null;
             String refreshToken = null;
 
-            if (cookies != null) {
+            // 1. 헤더 방식으로 검증
+            // TODO: 11/11/2023 여기서 헤더로 인증하는 방식 추가 예정
+            if (request.getHeader("Authorization") != null) {
+                String bearerToken = request.getHeader("Authorization").substring(7);
+                email = jwtUtil.extractAllClaims(bearerToken).getSubject();
+                jwt = bearerToken;
+            } else if (request.getHeader("RefreshToken") != null) {
+                refreshToken = request.getHeader("RefreshToken");
+            } else if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     if ("access_token".equals(cookie.getName())) {
                         jwt = cookie.getValue();
