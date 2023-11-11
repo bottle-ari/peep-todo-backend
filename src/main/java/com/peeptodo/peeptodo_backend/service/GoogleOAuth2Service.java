@@ -97,12 +97,17 @@ public class GoogleOAuth2Service {
             String jwtToken = jwtUtil.generateToken(user);
             String jwtRefreshToken = jwtUtil.generateRefreshToken(user);
 
-            // TODO: 11/11/2023 여기에 쿠키 대신 http 헤더에 넣어서 전송 (responseEntity에 담아서 전송)
             HttpHeaders headers = new HttpHeaders();
 
             // ----------- 헤더에 토큰 추가 -----------
-            headers.add("Authorization", "Bearer " + jwtToken);
-            headers.add("RefreshToken", jwtRefreshToken);
+            // TODO: 11/11/2023 둘의 차이가 뭐임??
+            // TODO: 11/11/2023 headers.set을 하면 추가가 되는데, headers.add를 하면 추가가 안됨
+            headers.set("Authorization", "Bearer " + jwtToken);
+            headers.set("RefreshToken", jwtRefreshToken);
+
+
+//            response.setHeader("Authorization", "Bearer " + jwtToken);
+//            response.setHeader("RefreshToken", jwtRefreshToken);
             // ----------------------
 
             // ----------- cookie -----------
@@ -130,12 +135,11 @@ public class GoogleOAuth2Service {
 
 
             // 23.10.17 : 리다이렉트 -> 프론트엔드에서 백엔드로 수정
-            //            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.FRONTEND.getValue() + "/scheduled_todo");
+//                        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.FRONTEND.getValue() + "/scheduled_todo");
 
+            // setLocation을 하면 http 헤더에서 인증 헤더가 안보여서 임시로 주석
 //            UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(DomainUrl.BACKEND.getValue() + "/");
-//
 //            URI uri = uriBuilder.build().toUri();
-//
 //            headers.setLocation(uri);
 
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
