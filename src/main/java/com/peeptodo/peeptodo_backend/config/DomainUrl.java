@@ -9,7 +9,7 @@ public enum DomainUrl {
     // infra
     FRONTEND("https://peeptodo.com"),
     // 백엔드 로컬 http://localhost:8100
-    BACKEND("https://peeptodo.com"); // TODO: 11/9/2023 여기서 8100을 application.properties에서 바로 가져오도록 수정
+    BACKEND("http://localhost:8100");
     
     private final String value;
 
