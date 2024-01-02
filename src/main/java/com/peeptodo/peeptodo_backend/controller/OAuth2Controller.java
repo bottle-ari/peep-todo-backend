@@ -27,10 +27,10 @@ public class OAuth2Controller {
         return googleAccessToken;
     }
 
-
     // 23.10.17
     @GetMapping("/api/login/google")
     public ResponseEntity<?> getGoogleAuthUrl(HttpServletRequest request) throws Exception {
+        // TODO: 11/17/2023 아래 상수로 빼기
         var googleClientId = System.getenv("OAUTH_GOOGLE_ID");
         var googleRedirectUrl = DomainUrl.BACKEND.getValue() + "/api/oauth2/callback/google";
 
@@ -43,8 +43,6 @@ public class OAuth2Controller {
         headers.setLocation(URI.create(reqUrl));
 
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
-
-
     }
 }
 

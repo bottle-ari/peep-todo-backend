@@ -13,7 +13,7 @@ public enum DomainUrl {
     
     private final String value;
 
-    DomainUrl(String value){
+    DomainUrl(String value) {
         this.value = value;
     }
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.beans.factory.annotation.Value;
+
 
 @Entity
 @Getter

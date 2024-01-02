@@ -50,7 +50,6 @@ public class SecurityConfig {
                             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                         .exceptionHandling(handler->handler.authenticationEntryPoint(authenticationEntryPoint))
-
 //                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
     }

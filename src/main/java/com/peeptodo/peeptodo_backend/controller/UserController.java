@@ -53,9 +53,4 @@ public class UserController {
         userService.updateImage(id, newImage);
         return ResponseEntity.ok().build();
     }
-
-
-
-
-
 }
