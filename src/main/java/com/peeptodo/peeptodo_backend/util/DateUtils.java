@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
 
-    private final static String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    public final static String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss"; // ex) 2021-10-31T23:59:59
 
     /**
      * 나중에 해외판을 대비해서 지역 설정

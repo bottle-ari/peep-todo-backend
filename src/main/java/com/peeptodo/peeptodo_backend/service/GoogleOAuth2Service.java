@@ -100,9 +100,6 @@ public class GoogleOAuth2Service {
             HttpHeaders headers = new HttpHeaders();
 
             // ----------- 헤더에 토큰 추가 -----------
-            // TODO: 11/11/2023 둘의 차이가 뭐임??
-            // TODO: 11/11/2023 headers.set을 하면 추가가 되는데, headers.add를 하면 추가가 안됨
-            // TODO: 11/17/2023 복귀
             headers.set("Authorization", "Bearer " + jwtToken);
             headers.set("RefreshToken", jwtRefreshToken);
 //            headers.add("Authorization", "Bearer " + jwtToken);

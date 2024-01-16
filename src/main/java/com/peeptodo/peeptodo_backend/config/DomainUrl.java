@@ -9,8 +9,9 @@ public enum DomainUrl {
     // infra
     FRONTEND("https://peeptodo.com"),
     // 백엔드 로컬 http://localhost:8100
-    BACKEND("http://localhost:8100");
-    
+//    BACKEND("http://localhost:8100");
+    BACKEND("http://peeptodo.com");
+
     private final String value;
 
     DomainUrl(String value) {

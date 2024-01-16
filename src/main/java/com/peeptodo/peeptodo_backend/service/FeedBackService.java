@@ -24,8 +24,8 @@ public class FeedBackService {
     private FeedBackRepository feedBackRepository;
 
     public FeedBack createFeedBack(FeedBackRequestDto requestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
 
         FeedBack feedBack = new FeedBack();
         feedBack.setDateTime(requestDto.getDateTime());

@@ -1,5 +1,7 @@
 package com.peeptodo.peeptodo_backend.domain;
 
+import com.peeptodo.peeptodo_backend.listener.FeedbackEntityListener;
+import com.peeptodo.peeptodo_backend.listener.TodoEntityListener;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@EntityListeners(FeedbackEntityListener.class)
 public class FeedBack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

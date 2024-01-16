@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            if (request.getRequestURI().startsWith("/api/login/google")) {
+            if (request.getRequestURI().startsWith("/api/login/google") | request.getRequestURI().startsWith("/api/feedback")) {
                 filterChain.doFilter(request, response);
                 return;
             } else if (request.getRequestURI().startsWith("/api/oauth2/callback")) {
